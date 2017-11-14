@@ -1,4 +1,4 @@
-function [Ga] = GaCalculate(nPoints,x,BCval,c1,itau,kappa,a,B,l,c2,u)
+function [Ga,GaL2] = GaCalculate(nPoints,x,BCval,c1,itau,kappa,a,B,l,c2,u)
 
 %source
 nElement = nPoints-1;
@@ -20,7 +20,7 @@ for element = 1:nElement
     Ga(IEN(element,1)) = ga(1)+Ga(IEN(element,1));
     Ga(IEN(element,2)) = ga(2)+ Ga(IEN(element,2));
 end
-Ga = (sum(Ga(2:end-1).^2))^0.5;
+GaL2 = (sum(Ga(2:end-1).^2))^0.5/(nPoints)^0.5;
 end
 
 function [ga] = ElementGa(a0,k0,B,itau,J,InvJ,f0,xarray,BCval,ele,c1,c2,u1,u2)

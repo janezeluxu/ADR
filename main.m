@@ -1,4 +1,4 @@
-function [u,c1,c1new] = main(itau,nPoints,x,uTol,maxIter,dt,c1,kappa,a,B,f,BCval,FigNum,lineType,c2)
+function [u,c1,Ga,G] = main(itau,nPoints,x,uTol,maxIter,dt,c1,kappa,a,B,f,BCval,FigNum,lineType,c2)
 global h;
 [u] = solveUstrong(nPoints,x,BCval,c1,itau,kappa,a,B,f,c2);
 %uGa = GaCalculate(nPoints,x,BCval,c1,itau,kappa,a,B,f,c2,u)
@@ -12,13 +12,13 @@ if itau == 3
         c1 = (1/(1+dt))*c1+(dt/(1+dt))*c1new;
         [unew] = solveUstrong(nPoints,x,BCval,c1,itau,kappa,a,B,f,c2);
         
-        normu = norm(u-unew)/norm(unew);
-        [Ga] = GaCalculate(nPoints,x,BCval,c1,itau,kappa,a,B,f,c2,u)/(nPoints)^0.5;
+        %normu = norm(u-unew)/norm(unew);
+        [Ga,GaL2] = GaCalculate(nPoints,x,BCval,c1,itau,kappa,a,B,f,c2,u);
         [Qa] = QaCalculate(nPoints,x,BCval,c1,kappa,a,f,c2,u)/(nPoints)^0.5;
-        G(iteration) = Ga;
+        G(iteration) = GaL2;
         Q(iteration) = Qa;
         u = unew;
-        if  (Ga <uTol) 
+        if  (GaL2 <uTol) 
             break
         end
         
@@ -29,7 +29,7 @@ figure (FigNum)
 plot(x,u,lineType)
 
 Pe = norm(a)*h(1)/(2*norm(kappa))
-title(horzcat('Pe = 10000 Da = Pe/500'),'FontSize',20);
+title(horzcat('Pe = 10 Da = Pe/500'),'FontSize',20);
 hold on
 end
 

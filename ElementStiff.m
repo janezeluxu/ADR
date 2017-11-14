@@ -42,8 +42,9 @@ function [tau] = tauFunc(element,c1element,itau,kappa,a,B,InvJ,c2)
 global h;
 if(itau == 1)
     alpha = norm(a)*h(element)/(2*norm(kappa));
-    zi = coth(alpha)-1/alpha;
-    tau = h(element)*zi/(2*norm(a));
+    sigma = B*h(element)/norm(a);
+    Cm=1/3;
+    tau = h(element)/(norm(a)*(max(1/(Cm*alpha),2)+max(1/(Cm*alpha),abs(sigma))));
 elseif(itau == 2) 
     tau1 = h(element)/(2*a);
     tau2 = h(element)^2/(4*kappa);
